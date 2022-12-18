@@ -9,7 +9,7 @@ total_sec = 0
 for video in videos[:len(videos) - 1]:
     probe = ffmpeg.probe(video)
     total_sec += int(float(probe['format']['duration']))
-    assert(total_sec < 3600)
+    assert(total_sec < 24 * 3600)
     min = total_sec // 60
     sec = total_sec - 60 * min
     print("{:02}:{:02}".format(min, sec))
