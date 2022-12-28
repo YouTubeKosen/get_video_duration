@@ -4,7 +4,7 @@ import ffmpeg
 import glob
 
 videos = glob.glob("*.mp4")
-sorted(videos)
+videos.sort()
 total_sec = 0
 for video in videos[:len(videos) - 1]:
     probe = ffmpeg.probe(video)
