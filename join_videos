@@ -1,0 +1,42 @@
+#! /usr/bin/python3
+
+import ffmpeg
+import glob
+import os
+import shutil
+
+FILTERED_DIRECTORY_NAME = "/tmp/filtered_video"
+TEMPORARY_TXT_FILE = "/tmp/filtered_video/video_list.txt"
+
+def filter_videos():
+  videos = glob.glob("*.mp4")
+  videos.sort()
+  if os.path.exists(FILTERED_DIRECTORY_NAME):
+    shutil.rmtree(FILTERED_DIRECTORY_NAME)
+  os.makedirs(FILTERED_DIRECTORY_NAME, exist_ok=True)
+
+  for video in videos:
+    out_path = os.path.split(video)[0] + FILTERED_DIRECTORY_NAME + "/" + os.path.split(video)[1].replace(' ', '_')
+    probe = ffmpeg.probe(video)
+    end_start = int(float(probe['format']['duration'])) - 1
+    ffmpeg.input(video) \
+    .output(out_path, vf=f'fade=t=in:st=0:d=1,fade=t=out:st={end_start}:d=1', af=f'afade=t=out:st={end_start}:d=1').run()
+
+def join_videos():
+  videos = glob.glob(FILTERED_DIRECTORY_NAME + "/*.mp4")
+  videos.sort()
+  with open(TEMPORARY_TXT_FILE, "w") as fp:
+    lines = ["file " + line for line in videos]
+    fp.write("\n".join(lines))
+  print(lines)
+  ffmpeg.input(TEMPORARY_TXT_FILE, f="concat", safe=0).output("out.mp4", c="copy").run()
+  os.remove(TEMPORARY_TXT_FILE)
+
+def remove_filtered_videos():
+  if os.path.exists(FILTERED_DIRECTORY_NAME):
+    shutil.rmtree(FILTERED_DIRECTORY_NAME)
+
+if __name__ == '__main__':
+  filter_videos()
+  join_videos()
+  remove_filtered_videos()
