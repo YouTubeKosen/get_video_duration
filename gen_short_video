@@ -12,5 +12,6 @@ else:
     videos = glob.glob("*.mp4")
     videos.sort()
     video = videos[0]
+output = video.split(".")[0] + "_short." + video.split(".")[1]
 ffmpeg.input(video) \
-.output("short.mp4", vf='pad=w=iw:h=ih+2333:x=0:y=1166:color=black', acodec='copy', s='1080x1920').run()
+.output(output, t='59.9', vf='pad=w=iw:h=ih+2333:x=0:y=1166:color=black', acodec='copy', s='1080x1920').run()
