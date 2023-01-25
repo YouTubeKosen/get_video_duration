@@ -1,0 +1,15 @@
+#! /usr/bin/python3
+
+import ffmpeg
+import sys
+
+args = sys.argv
+
+if len(args) == 3:
+    video = args[1]
+    time = args[2]
+else:
+    exit()
+output = video.split(".")[0] + "_clipped." + video.split(".")[1]
+ffmpeg.input(video) \
+.output(output, t=time, codec='copy').run()
