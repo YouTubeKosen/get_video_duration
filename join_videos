@@ -20,7 +20,7 @@ def filter_videos():
     probe = ffmpeg.probe(video)
     end_start = int(float(probe['format']['duration'])) - 1
     ffmpeg.input(video) \
-    .output(out_path, vf=f'fade=t=in:st=0:d=1,fade=t=out:st={end_start}:d=1', af=f'afade=t=out:st={end_start}:d=1').run()
+    .output(out_path, vcodec='h264_nvenc', vf=f'fade=t=in:st=0:d=1,fade=t=out:st={end_start}:d=1', af=f'afade=t=out:st={end_start}:d=1').run()
 
 def join_videos():
   videos = glob.glob(FILTERED_DIRECTORY_NAME + "/*.mp4")
@@ -29,7 +29,7 @@ def join_videos():
     lines = ["file " + line for line in videos]
     fp.write("\n".join(lines))
   print(lines)
-  ffmpeg.input(TEMPORARY_TXT_FILE, f="concat", safe=0).output("out.mp4", c="copy").run()
+  ffmpeg.input(TEMPORARY_TXT_FILE, f="concat", safe=0).output("out.mp4", vcodec='h264_nvenc', acodec="copy").run()
   os.remove(TEMPORARY_TXT_FILE)
 
 def remove_filtered_videos():
