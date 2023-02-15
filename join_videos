@@ -29,7 +29,7 @@ def join_videos():
     lines = ["file " + line for line in videos]
     fp.write("\n".join(lines))
   print(lines)
-  ffmpeg.input(TEMPORARY_TXT_FILE, f="concat", safe=0).output("out.mp4", vcodec='h264_nvenc', acodec="copy").run()
+  ffmpeg.input(TEMPORARY_TXT_FILE, f="concat", safe=0).output("out.mp4", codec="copy").run()
   os.remove(TEMPORARY_TXT_FILE)
 
 def remove_filtered_videos():
