@@ -1,0 +1,21 @@
+#! /usr/bin/python3
+
+import ffmpeg
+import glob
+import os
+import shutil
+
+TEMPORARY_TXT_FILE = "video_list.txt"
+
+def join_videos():
+  videos = glob.glob("*.mp4")
+  videos.sort()
+  with open(TEMPORARY_TXT_FILE, "w") as fp:
+    lines = ["file " + line for line in videos]
+    fp.write("\n".join(lines))
+  print(lines)
+  ffmpeg.input(TEMPORARY_TXT_FILE, f="concat", safe=0).output("out.mp4", codec="copy").run()
+  os.remove(TEMPORARY_TXT_FILE)
+
+if __name__ == '__main__':
+  join_videos()
