@@ -1,0 +1,23 @@
+#! /usr/bin/python3
+
+import ffmpeg
+import sys
+
+def set_bgm(video, bgm):
+  output = video.split(".")[0] + "_bgm." + video.split(".")[1]
+
+  video_stream = ffmpeg.input(video)
+  bgm_sream = ffmpeg.input(bgm, stream_loop=1).filter("volume", volume=0.05)
+  audio = ffmpeg.filter([video_stream.audio, bgm_sream], filter_name='amix')
+  ffmpeg.output(audio, video_stream.video, output, vcodec='copy', shortest=None).run()
+
+if __name__ == '__main__':
+  args = sys.argv
+
+  if len(args) == 3:
+      video = args[1]
+      bgm = args[2]
+      set_bgm(video, bgm)
+  else:
+      exit()
+    
