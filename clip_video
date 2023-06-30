@@ -7,9 +7,14 @@ args = sys.argv
 
 if len(args) == 3:
     video = args[1]
-    time = args[2]
+    ss = 0
+    to = args[2]
+elif len(args) == 4:
+    video = args[1]
+    ss = args[2]
+    to = args[3]
 else:
     exit()
 output = video.split(".")[0] + "_clipped." + video.split(".")[1]
 ffmpeg.input(video) \
-.output(output, t=time, codec='copy').run()
+.output(output, ss=ss, to=to, codec='copy').run(overwrite_output=True)
