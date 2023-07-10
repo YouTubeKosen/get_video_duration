@@ -17,4 +17,4 @@ else:
     exit()
 output = video.split(".")[0] + "_clipped." + video.split(".")[1]
 ffmpeg.input(video) \
-.output(output, ss=ss, to=to, codec='copy').run(overwrite_output=True)
+.output(output, ss=ss, to=to, vcodec='h264_nvenc', acodec='copy').run(overwrite_output=True)

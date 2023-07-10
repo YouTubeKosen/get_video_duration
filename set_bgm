@@ -7,7 +7,7 @@ def set_bgm(video, bgm):
   output = video.split(".")[0] + "_bgm." + video.split(".")[1]
 
   video_stream = ffmpeg.input(video)
-  bgm_sream = ffmpeg.input(bgm, stream_loop=1).filter("volume", volume=0.05)
+  bgm_sream = ffmpeg.input(bgm, stream_loop="-1").filter("volume", volume=0.05)
   audio = ffmpeg.filter([video_stream.audio, bgm_sream], filter_name='amix', normalize=0)
   cmd=  ffmpeg.output(audio, video_stream.video, output, vcodec='copy', shortest=None)
   print(cmd.get_args())
